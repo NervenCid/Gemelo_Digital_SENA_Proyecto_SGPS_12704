@@ -1,0 +1,11 @@
+1. Para correr el servidor de base de datos:
+
+    > uvicorn src.app:app --host 0.0.0.0  --port 9085 --reload --lifespan=on
+
+2. Para correr el servidor de websockets:
+
+    > uvicorn src.app:app --host 0.0.0.0  --port 9080 --reload --lifespan=on
+
+3. Para correr todo el proyecto:
+
+    > docker-compose up

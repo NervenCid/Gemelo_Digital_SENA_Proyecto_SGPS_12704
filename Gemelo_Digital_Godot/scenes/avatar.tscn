@@ -1,0 +1,124 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddxc6df1jyr0l"]
+
+[ext_resource type="PackedScene" uid="uid://bdq6ajic6fjrf" path="res://assets/models/mixamo_base.glb" id="1_shd1f"]
+
+[sub_resource type="GDScript" id="GDScript_8eje4"]
+script/source = "extends CharacterBody3D
+
+#Llamamos al nodo 'camera_mount'
+@onready var camera_mount = $camera_mount
+
+#Llamamos al nodo 'animation_player'
+@onready var animation_player = $visuals/mixamo_base/AnimationPlayer
+
+#Llamamos al nodo 'visuals'
+@onready var visuals = $visuals
+
+#Declaramos los parametros de velocidad y salto por defecto
+var SPEED = 5.0
+const JUMP_VELOCITY = 4.5
+
+#Declaramos los parametros de velocidad de caminata y de correr
+var walking_speed = 3.0
+var running_speed = 8.0
+
+#Declaramos una variable que almacenara el estado de si esta corriendo o camiendo el 'player'
+var running = false
+
+#Configuramos la sensibilidad del mouse con '@export' podemos usarlo en la GUI
+@export var sens_horizontal = 0.4
+@export var sens_vertical = 0.4
+
+#Esta funcion permite capturar la captura el movimiento del 'mouse'
+func _input(event):
+
+	#Recibimos el movimiento del mouse y evaluamos
+	if event is InputEventMouseMotion:
+		#Rotamos horizontalmente
+		rotate_y(deg_to_rad(-event.relative.x*sens_horizontal))
+		#Esto nos permite rotar la camara al rededor del 'player'
+		visuals.rotate_y(deg_to_rad(event.relative.x*sens_vertical))
+		#Rotamos verticalmente
+		camera_mount.rotate_x(deg_to_rad(-event.relative.y*sens_vertical))
+		#Ponemos un limite a la rotacion en y
+		camera_mount.rotation.x = clamp(camera_mount.rotation.x, deg_to_rad(-89), deg_to_rad(89))
+
+# Declaramos un manejador de entradas no esperadas
+func _unhandled_input(_event):
+	#Esto nos permitira cerrar la ventana con la tecla 'esc'
+	if Input.is_action_just_pressed(\"quit\"):
+		get_tree().quit()
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+	
+	#Modificamos la velocidad de movimiento si se desea correr
+	if Input.is_action_pressed(\"run\"):
+		SPEED = running_speed
+		running = true
+	else:
+		SPEED = walking_speed
+		running = false
+		
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir = Input.get_vector(\"left\", \"right\", \"forward\", \"backward\")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		
+		#Validamos que si el 'player' esta corriendo o no
+		if running:
+
+			#Llamamos a la animacion 'running'
+			if animation_player.current_animation != \"running\":
+				animation_player.play(\"running\")
+			
+		else:
+
+			#Llamamos a la animacion 'walking'
+			if animation_player.current_animation != \"walking\":
+				animation_player.play(\"walking\")
+
+		#Con esto hacemos que el 'player' siempre mire en la direccion en la cual se mueve
+		visuals.look_at(position+direction)
+		
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		
+		#Llamamos a la animacion 'idle'
+		if animation_player.current_animation != \"idle\":
+			animation_player.play(\"idle\")
+				
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6x1a2"]
+radius = 0.3
+
+[node name="avatar" type="CharacterBody3D"]
+script = SubResource("GDScript_8eje4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_6x1a2")
+
+[node name="visuals" type="Node3D" parent="."]
+
+[node name="mixamo_base" parent="visuals" instance=ExtResource("1_shd1f")]
+transform = Transform3D(-0.6, 0, 5.24537e-08, 0, 0.6, 0, -5.24537e-08, 0, -0.6, 0, 0, 0)
+
+[node name="camera_mount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.996437, 0.0843387, 0, -0.0843387, 0.996437, 0, 0.8, 0.631634)
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount"]
+transform = Transform3D(1, 0, 0, 0, 0.99794, 0.0641491, 0, -0.0641491, 0.99794, 0, 0.363, 0.8)

@@ -160,3 +160,6 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+Gemelo_Digital_Godot/base_url.json
+Gemelo_Digital_Godot/.vscode/launch.json
+Infraestructura/*

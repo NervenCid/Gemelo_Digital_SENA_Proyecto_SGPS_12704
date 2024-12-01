@@ -1,0 +1,135 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjuwqkl51gxyv"]
+
+[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_41vwn"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_41vwn")
+
+[node name="Last_transmission_received" type="PanelContainer" parent="."]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 270.0
+offset_bottom = 97.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Last_transmission_received"]
+clip_contents = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Last_transmission_received/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Ultima transmisión recibida"
+
+[node name="HBoxTimeContainer" type="HBoxContainer" parent="Last_transmission_received/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Last_transmission_received/VBoxContainer/HBoxTimeContainer"]
+layout_mode = 2
+text = "Time: "
+
+[node name="time_measure" type="RichTextLabel" parent="Last_transmission_received/VBoxContainer/HBoxTimeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxSensorContainer" type="HBoxContainer" parent="Last_transmission_received/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="Last_transmission_received/VBoxContainer/HBoxSensorContainer"]
+layout_mode = 2
+text = "Sensor: "
+
+[node name="sensor_topic" type="RichTextLabel" parent="Last_transmission_received/VBoxContainer/HBoxSensorContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxMessageContainer" type="HBoxContainer" parent="Last_transmission_received/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Last_transmission_received/VBoxContainer/HBoxMessageContainer"]
+layout_mode = 2
+text = "Message: "
+
+[node name="message" type="RichTextLabel" parent="Last_transmission_received/VBoxContainer/HBoxMessageContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.730903
+anchor_top = 0.0385802
+anchor_right = 0.972222
+anchor_bottom = 0.282407
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Clima Externo"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Temperature: "
+
+[node name="temperature_measure" type="RichTextLabel" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Humidity: "
+
+[node name="humidity_measure" type="RichTextLabel" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Wind Direction:"
+
+[node name="wind_direction_measure" type="RichTextLabel" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Wind Speed:"
+
+[node name="wind_speed_measure" type="RichTextLabel" parent="PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Pressure: "
+
+[node name="pressure_measure" type="RichTextLabel" parent="PanelContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3

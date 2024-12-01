@@ -1,0 +1,11 @@
+Model Information:
+* title:	Plant - Outdoors
+* source:	https://sketchfab.com/3d-models/plant-outdoors-7e30a1e229a4411d8d3ee659d3ff5747
+* author:	Glowbox 3D (https://sketchfab.com/ra3id)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Plant - Outdoors" (https://sketchfab.com/3d-models/plant-outdoors-7e30a1e229a4411d8d3ee659d3ff5747) by Glowbox 3D (https://sketchfab.com/ra3id) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

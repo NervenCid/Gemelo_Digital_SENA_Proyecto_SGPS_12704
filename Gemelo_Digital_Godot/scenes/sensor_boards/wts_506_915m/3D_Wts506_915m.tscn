@@ -1,0 +1,132 @@
+[gd_scene load_steps=6 format=3 uid="uid://dhc07hc3l5pob"]
+
+[ext_resource type="Script" path="res://scripts/sensor_boards_scripts/ui_wts_506_915m.gd" id="1_6nmy8"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_a46b3"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qmk4c"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_a46b3")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_b14gj"]
+size = Vector2(1, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ki7"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_a46b3")
+
+[node name="Wts506_915M_BoardMount" type="Node3D"]
+
+[node name="board_display" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, -3.82137e-15, 0, -4.37114e-08, -1, -8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_qmk4c")
+mesh = SubResource("PlaneMesh_b14gj")
+
+[node name="board_display2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_l5ki7")
+mesh = SubResource("PlaneMesh_b14gj")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size_2d_override = Vector2i(330, 200)
+size_2d_override_stretch = true
+
+[node name="BoardUI" type="Control" parent="SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6nmy8")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewport/BoardUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -153.0
+offset_top = -92.5
+offset_right = 153.0
+offset_bottom = 92.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewport/BoardUI/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "WTS506_915M"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Battery: "
+
+[node name="battery_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Temperature: "
+
+[node name="temperature_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Humidity: "
+
+[node name="humidity_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Wind Direction: "
+
+[node name="wind_direction_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Wind Speed: "
+
+[node name="wind_speed_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+text = "Pressure: "
+
+[node name="pressure_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3

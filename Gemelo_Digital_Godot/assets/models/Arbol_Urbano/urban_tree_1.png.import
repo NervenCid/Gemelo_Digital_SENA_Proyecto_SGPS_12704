@@ -1,0 +1,39 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dybyafq6pi1vj"
+path.s3tc="res://.godot/imported/urban_tree_1.png-155991b9cb9fb58155b011ea898f5f3f.s3tc.ctex"
+path.etc2="res://.godot/imported/urban_tree_1.png-155991b9cb9fb58155b011ea898f5f3f.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "29dedb8762d3a12c0846da9ad82f70ab"
+}
+
+[deps]
+
+source_file="res://assets/models/Arbol_Urbano/urban_tree_1.png"
+dest_files=["res://.godot/imported/urban_tree_1.png-155991b9cb9fb58155b011ea898f5f3f.s3tc.ctex", "res://.godot/imported/urban_tree_1.png-155991b9cb9fb58155b011ea898f5f3f.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=1
+roughness/src_normal="res://assets/models/Arbol_Urbano/urban_tree_1.png"
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

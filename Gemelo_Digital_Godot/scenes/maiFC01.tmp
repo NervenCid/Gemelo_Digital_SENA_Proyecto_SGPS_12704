@@ -1,0 +1,57 @@
+[gd_scene load_steps=12 format=3 uid="uid://c7sjrv3ufuc4q"]
+
+[ext_resource type="Texture2D" uid="uid://dprwn2mbhlchg" path="res://assets/textures/grids/Green/texture_08.png" id="1_8fefh"]
+[ext_resource type="PackedScene" uid="uid://bh4p1uppod1mh" path="res://assets/models/Ensamblaje_Invernadero.gltf" id="2_td015"]
+[ext_resource type="Script" path="res://scripts/web_socket_client.gd" id="2_xdmb3"]
+[ext_resource type="PackedScene" uid="uid://ddxc6df1jyr0l" path="res://scenes/avatar.tscn" id="3_plqpq"]
+[ext_resource type="PackedScene" uid="uid://cjuwqkl51gxyv" path="res://scenes/user_interface.tscn" id="4_k4jtp"]
+[ext_resource type="PackedScene" uid="uid://bxmwg8b0dt0p2" path="res://scenes/sensor_boards/em_300_th_915_2/3D_em300_th_915_2.tscn" id="6_y4ynv"]
+[ext_resource type="PackedScene" uid="uid://ippks2cnd28m" path="res://scenes/sensor_boards/em_300_th_915_1/3D_em300_th_915_1.tscn" id="7_gcpot"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c6jmc"]
+
+[sub_resource type="Sky" id="Sky_hs1qc"]
+sky_material = SubResource("ProceduralSkyMaterial_c6jmc")
+
+[sub_resource type="Environment" id="Environment_rfc2g"]
+background_mode = 2
+sky = SubResource("Sky_hs1qc")
+sdfgi_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4bwa"]
+albedo_texture = ExtResource("1_8fefh")
+
+[node name="World" type="Node3D"]
+
+[node name="WebSocketClient" type="Node" parent="."]
+script = ExtResource("2_xdmb3")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_rfc2g")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 16.1853, 0)
+light_color = Color(0.838897, 0.838897, 0.838897, 1)
+shadow_enabled = true
+
+[node name="terrain" type="Node3D" parent="."]
+
+[node name="floor" type="CSGBox3D" parent="terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_l4bwa")
+use_collision = true
+size = Vector3(50, 1, 50)
+
+[node name="green_house" parent="." instance=ExtResource("2_td015")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.109, 0, 0.5)
+
+[node name="avatar" parent="." instance=ExtResource("3_plqpq")]
+transform = Transform3D(0.214394, 0, 0.976747, 0, 1, 0, -0.976747, 0, 0.214394, 6.95282, 0, 0)
+
+[node name="HUD" parent="." instance=ExtResource("4_k4jtp")]
+
+[node name="Em300_TH_915_1_BoardMount" parent="." instance=ExtResource("7_gcpot")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3, 1.8, 0.23)
+
+[node name="Em300_TH_915_2_BoardMount" parent="." instance=ExtResource("6_y4ynv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3, 1.8, 0.23)

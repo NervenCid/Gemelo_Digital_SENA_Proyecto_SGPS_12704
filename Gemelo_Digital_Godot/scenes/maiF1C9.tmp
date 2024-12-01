@@ -1,0 +1,130 @@
+[gd_scene load_steps=14 format=3 uid="uid://c7sjrv3ufuc4q"]
+
+[ext_resource type="Texture2D" uid="uid://dprwn2mbhlchg" path="res://assets/textures/grids/Green/texture_08.png" id="1_8fefh"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_f8ubp"]
+[ext_resource type="PackedScene" uid="uid://bh4p1uppod1mh" path="res://assets/models/Ensamblaje_Invernadero.gltf" id="2_td015"]
+[ext_resource type="PackedScene" uid="uid://ddxc6df1jyr0l" path="res://scenes/avatar.tscn" id="3_plqpq"]
+[ext_resource type="PackedScene" uid="uid://cjuwqkl51gxyv" path="res://scenes/user_interface.tscn" id="4_k4jtp"]
+[ext_resource type="Script" path="res://scripts/sensor_boards_scripts/ui_em_300_th_915_1.gd" id="6_xheyl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c6jmc"]
+
+[sub_resource type="Sky" id="Sky_hs1qc"]
+sky_material = SubResource("ProceduralSkyMaterial_c6jmc")
+
+[sub_resource type="Environment" id="Environment_rfc2g"]
+background_mode = 2
+sky = SubResource("Sky_hs1qc")
+sdfgi_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4bwa"]
+albedo_texture = ExtResource("1_8fefh")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jjt3u"]
+viewport_path = NodePath("Em300_TH_915_1_BoardMount/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0frhu"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_jjt3u")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gpx2j"]
+size = Vector2(1, 0.25)
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_f8ubp")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_rfc2g")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 16.1853, 0)
+light_color = Color(0.838897, 0.838897, 0.838897, 1)
+shadow_enabled = true
+
+[node name="terrain" type="Node3D" parent="."]
+
+[node name="floor" type="CSGBox3D" parent="terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_l4bwa")
+use_collision = true
+size = Vector3(50, 1, 50)
+
+[node name="green_house" parent="." instance=ExtResource("2_td015")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 3.109, 0, 0.5)
+
+[node name="avatar" parent="." instance=ExtResource("3_plqpq")]
+transform = Transform3D(0.214394, 0, 0.976747, 0, 1, 0, -0.976747, 0, 0.214394, 6.95282, 0, 0)
+
+[node name="HUD" parent="." instance=ExtResource("4_k4jtp")]
+
+[node name="Em300_TH_915_1_BoardMount" type="Node3D" parent="."]
+transform = Transform3D(0.0297534, 0, 0.999557, 0, 1, 0, -0.999557, 0, 0.0297534, 3.23627, 1.74487, 0)
+
+[node name="board_display" type="MeshInstance3D" parent="Em300_TH_915_1_BoardMount"]
+transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_0frhu")
+mesh = SubResource("PlaneMesh_gpx2j")
+
+[node name="board_display2" type="MeshInstance3D" parent="Em300_TH_915_1_BoardMount"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_0frhu")
+mesh = SubResource("PlaneMesh_gpx2j")
+
+[node name="SubViewport" type="SubViewport" parent="Em300_TH_915_1_BoardMount"]
+size_2d_override = Vector2i(270, 100)
+size_2d_override_stretch = true
+
+[node name="BoardUI" type="Control" parent="Em300_TH_915_1_BoardMount/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_xheyl")
+
+[node name="PanelContainer" type="PanelContainer" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -38.5
+offset_right = 128.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Em300_TH_915_1"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Temperature: "
+
+[node name="temperature_measure" type="RichTextLabel" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Humidity: "
+
+[node name="humidity_measure" type="RichTextLabel" parent="Em300_TH_915_1_BoardMount/SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3

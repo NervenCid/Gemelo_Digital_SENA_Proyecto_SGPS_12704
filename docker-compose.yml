@@ -1,0 +1,328 @@
+#Esto es un comentario
+
+#Para ejecutar este archivo:
+#   >docker-compose up
+
+#Definimos la version (En este caso '3.8' es OBLIGATORIO)
+version: '3.8'
+
+#A continuacion declaramos los servicios
+services:
+
+    #Declaramos el servicio de 'portainer'
+    #OJO para acceder debe usar https NO http
+    portainer:
+        image: portainer/portainer-ce:2.20.1
+        hostname: portainer
+        container_name: portainer
+        restart: always
+        security_opt:
+            - no-new-privileges:true
+        volumes:
+            - /etc/localtime:/etc/  localtime:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./Infraestructura/portainer-data:/data
+        ports:
+            - 8001:8000
+            - 9443:9443
+        networks:
+            - digital_twin 
+
+    #Declaramos el servicio postgres
+    postgres:
+        #Definimos el 'Hostname'
+        hostname: postgres
+        #Seleccionamos la imagen de 'postgres'
+        image: postgres:15.1
+        container_name: postgres
+        #En caso de fallas reiniciamos el servidor
+        restart: always    
+        #Definimos el puerto de escucha    
+        ports:
+            - "5432:5432"      
+        #Decimos que esto depende de el servicio 'portainer'
+        depends_on: 
+            - portainer 
+        #Definimos las variables de entorno que configuraran 'postgres'
+        environment:
+            - POSTGRES_HOST=${POSTGRES_HOST}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+        #Declaramos los volumenes
+        volumes:
+            - ./Infraestructura/postgres-data:/var/lib/postgresql/data
+        #Declaramos las redes 
+        networks:
+            - digital_twin        
+    
+    #Declaramos el servico de 'pgadmin'
+    pgadmin:
+        #Definimos el 'Hostname'
+        hostname: pgadmin
+        #Seleccionamos la imagen de 'pgadmin'
+        image: dpage/pgadmin4
+        container_name: pgadmin
+        #En caso de fallas reiniciamos el servidor
+        restart: always        
+        #Definimos las variables de entorno que configuraran para 'pgadmin'
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+        #Definimos el puerto de escucha
+        ports:
+            - "8081:80"
+        #Ejecutamos como usuario con privilegios        
+        user: "${UID}:${GID}"
+        #Decimos que esto depende de el servicio 'postgres'
+        depends_on: 
+            - postgres
+        #Declaramos los volumenes
+        volumes:
+            - ./Infraestructura/pgadmin-data:/var/lib/pgadmin
+        #Declaramos las redes 
+        networks:
+            - digital_twin     
+
+    #Declaramos el servicio de 'mosquitto'
+    mosquitto:
+        #Seleccionamos la imagen
+        image: eclipse-mosquitto
+        #Definimos el 'hostname'
+        hostname: mosquitto
+        #Definimos el nombre del contenedor
+        container_name: mosquitto
+        #Definimos como se reiniciara el contenedor
+        restart: always
+        #Defninimos los puertos
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+        #Definimos los volumenes
+        volumes:
+            - ./Infraestructura/mosquitto:/etc/mosquitto
+            - ./Infraestructura/mosquitto/config:/mosquitto/config #Crear estas carpetas primero            
+            - ./Infraestructura/mosquitto/data:/mosquitto/data
+            - ./Infraestructura/mosquitto/log:/mosquitto/log
+        #Decimos que esto depende de el servicio 'pgadmin'
+        depends_on: 
+            - pgadmin 
+        #Declaramos las redes 
+        networks:
+            - digital_twin     
+    
+    #Declaramos el servicio 'nodered'
+    nodered:
+        #Seleccionamos la imagen de 'postgres'
+        image: nodered/node-red:latest
+        container_name: nodered
+        #Definimos el 'hostname'
+        hostname: nodered
+        #Declaramos las variables de entorno
+        environment: 
+            - TZ=America/Bogota
+        #Declaramos los puertos
+        ports:
+            - "1880:1880"
+        #Decimos que esto depende de el servicio 'nginx'
+        depends_on: 
+            - mosquitto 
+        #Declaramos las redes        
+        networks:
+            - digital_twin  
+        #Declaramos los volumenes
+        volumes:
+            - ./Infraestructura/node-red-data:/data
+
+    #Construimos el servicio 'jupyterhub'
+    jupyterhub:
+        #Construimos una imagen a partir del 'Dockerfile'
+        build: 
+            context: ./Infraestructura/Jupyterhub
+            dockerfile: Dockerfile
+        container_name: jupyterhub
+        #Declaramos las variables de entorno
+        environment: 
+            JUPYTERHUB_DB_URL: ${JUPYTERHUB_DB_URL}
+            JUPYTERHUB_ADMIN_USER: ${JUPYTERHUB_ADMIN_USER}
+            JUPYTERHUB_ADMIN_PASSWORD: ${JUPYTERHUB_ADMIN_PASSWORD}
+        #Declaramos los puertos
+        ports:
+            - "8095:8095"
+        #Decimos que esto depende de el servicio 'postgres'
+        depends_on: 
+            - postgres 
+        #Definimos como se reiniciara el contenedor
+        restart: always
+        #Declaramos las redes        
+        networks:
+            - digital_twin
+        #Declaramos los volumenes
+        volumes:
+            - ./Infraestructura/Jupyterhub/data:/srv/jupyterhub
+            - ./Infraestructura/Jupyterhub/data:/home
+            - ./Infraestructura/Jupyterhub/data/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+
+    #Declaramos el servicio de 'websockets'
+    websocket-server:
+        #Indicamos que se construira la imagen del 'Dockerfile' dentro de la carpeta 'Websocket_Server'
+        build: ./Websocket_Server
+        container_name: websocket-server
+        #Definimos el 'hostname'
+        hostname: websocket-server
+        #Declaramos las variables de entorno
+        environment: 
+            MQTT_BROKER: ${MQTT_BROKER}
+            MQTT_PORT: ${MQTT_PORT}
+            MQTT_TOPICS: ${MQTT_TOPICS}
+            MQTT_USERNAME: ${MQTT_USERNAME}
+            MQTT_PASSWORD: ${MQTT_PASSWORD}
+        #Decimos que esto depende de el servicio 'mosquitto'
+        depends_on: 
+            - mosquitto
+        #En caso de fallas reiniciamos el servidor
+        restart: always   
+        #Definimos los puertos externos/internos
+        ports: 
+            - "9080:9080"
+        #Declaramos las redes        
+        networks:
+            - digital_twin  
+
+    #Declaramos el servicio para escribir en la base de datos
+    data-base-write-server:
+        #Indicamos que se construira la imagen del 'Dockerfile' dentro de la carpeta 'Data_Base_Write_Server'
+        build: ./Data_Base_Write_Server
+        container_name: data-base-write-server
+        #Definimos el 'hostname'
+        hostname: data-base-write-server
+        #Declaramos las variables de entorno
+        environment: 
+            MQTT_BROKER: ${MQTT_BROKER}
+            MQTT_PORT: ${MQTT_PORT}
+            MQTT_TOPICS: ${MQTT_TOPICS}
+            MQTT_USERNAME: ${MQTT_USERNAME}
+            MQTT_PASSWORD: ${MQTT_PASSWORD}
+            POSTGRES_HOST: ${POSTGRES_HOST}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_PORT: ${POSTGRES_PORT}
+            DATABASE_URL: ${DATABASE_URL}
+        #Decimos que esto depende de el servicio 'postgres'
+        depends_on: 
+            - postgres
+        #En caso de fallas reiniciamos el servidor
+        restart: always   
+        #Definimos los puertos externos/internos
+        ports: 
+            - "9085:9085"
+        #Declaramos las redes        
+        networks:
+            - digital_twin 
+
+    #Declaramos el servicio para LEER UNICAMENTE en la base de datos
+    data-base-read-server:
+        #Indicamos que se construira la imagen del 'Dockerfile' dentro de la carpeta 'Data_Base_Read_Server'
+        build: ./Data_Base_Read_Server
+        container_name: data-base-read-server
+        #Definimos el 'hostname'
+        hostname: data-base-read-server
+        #Declaramos las variables de entorno
+        environment: 
+            MQTT_BROKER: ${MQTT_BROKER}
+            MQTT_PORT: ${MQTT_PORT}
+            MQTT_TOPICS: ${MQTT_TOPICS}
+            MQTT_USERNAME: ${MQTT_USERNAME}
+            MQTT_PASSWORD: ${MQTT_PASSWORD}
+            POSTGRES_HOST: ${POSTGRES_HOST}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_PORT: ${POSTGRES_PORT}
+            DATABASE_URL: ${DATABASE_URL}
+        #Decimos que esto depende de el servicio 'postgres'
+        depends_on: 
+            - postgres
+        #En caso de fallas reiniciamos el servidor
+        restart: always   
+        #Definimos los puertos externos/internos
+        ports: 
+            - "9090:9090"
+        #Declaramos las redes        
+        networks:
+            - digital_twin 
+
+    #Declaramos el servicio 'nginx-static' SOLO para servir archivos estaticos
+    nginx-static:
+        #Seleccionamos la imagen
+        image: nginx:latest
+        container_name: nginx-static
+        #Definimos el 'hostname'
+        hostname: nginx-static
+        #Defninimos los puertos
+        ports:
+            - "8080:8080"
+            #- "8443:443"
+        #Definimos los volumenes
+        volumes:
+            - ./Infraestructura/Nginx_static_server/data/html:/usr/share/nginx/html
+            - ./Infraestructura/Nginx_static_server/data/nginx/nginx.conf:/etc/nginx/nginx.conf
+            #- ./Infraestructura/Nginx_static_server/data/certs:/etc/nginx/certs
+        #Definimos como se reiniciara el contenedor
+        restart: always
+        #Decimos que esto depende de el servicio 'websocket-server'
+        depends_on: 
+            - websocket-server 
+        #Declaramos las redes 
+        networks:
+            - digital_twin   
+
+    #Declaramos el servicio 'nginx-static' que servira como 'proxy' inverso
+    nginx-reverse-proxy:
+        #Seleccionamos la imagen
+        image: nginx:latest
+        container_name: nginx-reverse-proxy
+        #Definimos el 'hostname'
+        hostname: nginx-reverse-proxy
+        #Defninimos los puertos
+        ports:
+            - "8090:8090"
+            #- "443:443"
+        #Definimos los volumenes
+        volumes:
+            #- ./Nginx_static_server/data/html:/usr/share/nginx/html
+            #- ./Infraestructura/Nginx_reverse_proxy/data/html:/usr/share/nginx/html
+            - ./Infraestructura/Nginx_reverse_proxy/data/nginx/nginx.conf:/etc/nginx/nginx.conf
+            #- ./Infraestructura/Nginx_reverse_proxy/data/certs:/etc/nginx/certs
+        #Definimos como se reiniciara el contenedor
+        restart: always
+        #Decimos que esto depende de el servicio 'websocket-server'
+        depends_on: 
+            - websocket-server 
+        #Declaramos las redes 
+        networks:
+            - digital_twin  
+
+    #Este servicio es OPCIONAL, ELIMINAR DESPUES
+    #ngrok:
+    #  image: ngrok/ngrok:latest
+    #  restart: unless-stopped
+    #  command:
+    #    - "start"
+    #    - "--all"
+    #    - "--config"
+    #    - "/etc/ngrok.yml"
+    #  volumes:
+    #    - ./Infraestructura/Ngrok/ngrok.yml:/etc/ngrok.yml
+    #  depends_on:
+    #    - nginx-static
+    #  environment:
+    #    - NGROK_AUTH_TOKEN=${NGROK_AUTH_TOKEN}
+    #  networks:
+    #    - digital_twin
+
+#Definimos que la red permitira a los contenedores comunicarse entre si
+networks:
+  digital_twin:
+    driver: bridge

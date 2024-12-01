@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://bx6t4me5a854n"]
+
+[ext_resource type="Script" path="res://scripts/sensor_boards_scripts/ui_em_500_lgt_915m.gd" id="1_2u4ix"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dcjw2"]
+size = Vector2(0.8, 0.2)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_2pq44"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6nsys"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_2pq44")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ns4um"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_2pq44")
+
+[node name="Em500_LGT_915M_BoardMount" type="Node3D"]
+
+[node name="board_display" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, -3.82137e-15, 0, -4.37114e-08, -1, -8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+mesh = SubResource("PlaneMesh_dcjw2")
+surface_material_override/0 = SubResource("StandardMaterial3D_6nsys")
+
+[node name="board_display2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("PlaneMesh_dcjw2")
+surface_material_override/0 = SubResource("StandardMaterial3D_ns4um")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size_2d_override = Vector2i(280, 90)
+size_2d_override_stretch = true
+
+[node name="BoardUI" type="Control" parent="SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2u4ix")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewport/BoardUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -28.0
+offset_right = 128.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewport/BoardUI/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Em500_LGT_915M"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Illumination: "
+
+[node name="Illumination_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

@@ -1,0 +1,110 @@
+[gd_scene load_steps=6 format=3 uid="uid://brd1lp83uh8g6"]
+
+[ext_resource type="Script" path="res://scripts/sensor_boards_scripts/ui_em_500_co2_915m.gd" id="1_7gk0p"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_k20by"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qj2fo"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_k20by")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g2yiv"]
+size = Vector2(1, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brviv"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_k20by")
+
+[node name="Em500_CO2_915M_BoardMount" type="Node3D"]
+
+[node name="board_display" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, -3.82137e-15, 0, -4.37114e-08, -1, -8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_qj2fo")
+mesh = SubResource("PlaneMesh_g2yiv")
+
+[node name="board_display2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_brviv")
+mesh = SubResource("PlaneMesh_g2yiv")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size_2d_override = Vector2i(270, 150)
+size_2d_override_stretch = true
+
+[node name="BoardUI" type="Control" parent="SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7gk0p")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewport/BoardUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -38.5
+offset_right = 128.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewport/BoardUI/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Em500_CO2_915M"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "CO2: "
+
+[node name="co2_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Temperature: "
+
+[node name="temperature_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Humidity: "
+
+[node name="humidity_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Pressure: "
+
+[node name="pressure_measure" type="RichTextLabel" parent="SubViewport/BoardUI/PanelContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
