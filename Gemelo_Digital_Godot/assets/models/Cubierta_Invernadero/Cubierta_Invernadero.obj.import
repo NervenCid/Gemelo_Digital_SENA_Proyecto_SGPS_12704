@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://1kns7pwc17v1"
+path="res://.godot/imported/Cubierta_Invernadero.obj-84225e6ab39e94682c37e1a5c2d7c58f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Cubierta_Invernadero.obj-84225e6ab39e94682c37e1a5c2d7c58f.mesh"]
+
+source_file="res://assets/models/Cubierta_Invernadero/Cubierta_Invernadero.obj"
+dest_files=["res://.godot/imported/Cubierta_Invernadero.obj-84225e6ab39e94682c37e1a5c2d7c58f.mesh", "res://.godot/imported/Cubierta_Invernadero.obj-84225e6ab39e94682c37e1a5c2d7c58f.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
